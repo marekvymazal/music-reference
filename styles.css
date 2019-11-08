@@ -1,0 +1,87 @@
+/* Dropdown Button */
+.dropbtn {
+ background-color: #3498DB;
+ color: white;
+ padding: 16px;
+ font-size: 16px;
+ border: none;
+ cursor: pointer;
+}
+
+/* Dropdown button on hover & focus */
+.dropbtn:hover, .dropbtn:focus {
+ background-color: #2980B9;
+}
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content .dropdownbtn {
+    color: black;
+    padding: 8px 16px;
+    text-decoration: none;
+    text-align: left;
+    display: block;
+    width: 100%;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content .dropdownbtn:hover {background-color: #ddd}
+
+/* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
+.show {display:block;}
+
+/* Piano Keyboard styles */
+#scale-display {
+    position: relative;
+}
+
+.key {
+    font-family: sans-serif;
+}
+
+.key.white {
+    color: black;
+    background-color: white;
+    display: inline-block;
+    white-space: pre;
+    padding: 100px 14px 0px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: black;
+    width: 8px;
+}
+.key.white.selected {
+    background-color: red;
+}
+
+.key.black {
+    color: white;
+    background-color: black;
+    display: inline-block;
+    white-space: pre;
+    padding: 30px 4px 0px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: black;
+    position: absolute;
+    margin-left: -16px;
+}
+.key.black.selected {
+    color: black;
+    background-color: red;
+}
