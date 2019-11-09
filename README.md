@@ -1,7 +1,7 @@
 # Music Reference
 A webpage to reference scales and chords when making music.
 
-[Visit Page](https://github.com/marekvymazal/music-reference "Music Reference")
+[Visit Page](https://marekvymazal.github.io/music-reference/ "Music Reference")
 
 **Todo list**
 - [ ] Improve layout
