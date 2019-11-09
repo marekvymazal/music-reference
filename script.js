@@ -1,5 +1,5 @@
 var curKey = 3;
-var curScale = "major";
+var curScale = "Major";
 
 // static data
 var keys = [
@@ -34,19 +34,19 @@ var keyIdentifier = [
 
 var scales = [
     {
-        name: "major",
+        name: "Major",
         intervals: [1,0,1,0,1,1,0,1,0,1,0,1]
     },
     {
-        name: "natural-minor",
+        name: "Natural Minor",
         intervals: [1,0,1,1,0,1,0,1,1,0,1,0]
     },
     {
-        name: "melodic-minor",
+        name: "Melodic Minor",
         intervals: [1,0,1,1,0,1,0,1,0,1,0,1]
     },
     {
-        name: "harmonic-minor",
+        name: "Harmonic Minor",
         intervals: [1,0,1,1,0,1,0,1,1,0,0,1]
     }
 ];
@@ -90,8 +90,18 @@ function convertKey( start, note, key, intervals ){
 }
 
 function updateScale(){
+
+    var width = window.innerWidth
+    || document.documentElement.clientWidth
+    || document.body.clientWidth;
+
+    var height = window.innerHeight
+    || document.documentElement.clientHeight
+    || document.body.clientHeight;
+
     console.log(curKey);
     console.log(curScale);
+    console.log(width);
 
     let curIntervals = null;
     scales.forEach( function( s ){
@@ -99,7 +109,6 @@ function updateScale(){
             curIntervals = s.intervals;
         }
     });
-    console.log( curIntervals );
 
     let scaleDisplay = document.getElementById('scale-display');
 
@@ -108,9 +117,24 @@ function updateScale(){
     //scaleDisplay.removeChildren();
 
     // add scales
-    for (var i=0; i<24; i++)
+    let totalKeys = 24;
+    if (width < 500){
+        totalKeys = 12;
+    }
+
+    let targetContainer = null;
+    for (var i=0; i<totalKeys; i++)
     {
         let keyValues = convertKey(3, i, curKey, curIntervals);
+
+        if (keyValues.keyType == 'white'){
+
+            // make new key container
+            let keyContainer = document.createElement("div");
+            keyContainer.className += "key-container";
+            scaleDisplay.appendChild(keyContainer);
+            targetContainer = keyContainer;
+        }
 
         let note = document.createElement("div");
         note.className += "key";
@@ -121,7 +145,7 @@ function updateScale(){
             note.className += " selected";
         }
 
-        scaleDisplay.appendChild(note);
+        targetContainer.appendChild(note);
     }
 
     // update title
@@ -130,6 +154,38 @@ function updateScale(){
 }
 
 // Setup Dropdowns ======================================================
+
+// generate key buttons
+let keyDropdown = document.getElementById('keyDropdown');
+for (var i=0; i<keys.length; i++){
+    let b = document.createElement("button");
+    b.className += "dropdownbtn";
+    b.innerHTML = keys[i].replace('\n', ' / ');
+
+    b.name = i;
+    b.onclick = function(){
+        curKey = parseInt(this.name);
+        updateScale();
+    };
+
+    keyDropdown.appendChild(b);
+}
+
+// generate scale buttons
+let scaleDropdown = document.getElementById('scaleDropdown');
+for (var i=0; i<scales.length; i++){
+    let b = document.createElement("button");
+    b.className += "dropdownbtn";
+    b.innerHTML = scales[i].name;
+
+    b.onclick = function(){
+        curScale = this.innerHTML;
+        updateScale();
+    };
+
+    scaleDropdown.appendChild(b);
+}
+
 function enableDropdown(name, enabled ){
     var dropdowns = document.getElementsByClassName("dropdown-content");
 
@@ -186,15 +242,7 @@ for (var i=0; i<keyButtons.length; i++ )
     };
 };
 
-// scale buttons
-var scaleButtons = document.getElementById('scaleDropdown').getElementsByTagName('button');
-for (var i=0; i<scaleButtons.length; i++ )
-{
-    scaleButtons[i].onclick = function(){
-        curScale = this.innerHTML.replace(' ', '-').toLowerCase();
-        updateScale();
-    };
-};
-
 // initial setup
 updateScale();
+
+window.addEventListener("resize", updateScale);
