@@ -1,16 +1,58 @@
+body {
+    background: whitesmoke;
+    margin: 0px;
+    font-family: 'Open Sans', sans-serif;
+}
+
+#header {
+    background: black;
+    padding: 10px 20px;
+    display: flex;
+}
+
+#page-title {
+    margin: auto 0px;
+    padding: 10px 0px;
+    display: inline-block;
+    color: #b3b3b3;
+    letter-spacing: 1px;
+    font-weight: lighter;
+    font-size: 1.5rem;
+    flex-basis: 100%;
+}
+
+#options {
+    display: flex;
+    /* align-content: flex-end; */
+    justify-content: flex-end;
+}
+
+@media all and (max-width: 410px) {
+    #header {
+        flex-wrap: wrap;
+    }
+    #page-title {
+        text-align: center;
+    }
+    #options {
+        flex-basis: 100%;
+    }
+}
+
 /* Dropdown Button */
 .dropbtn {
- background-color: #3498DB;
- color: white;
- padding: 16px;
- font-size: 16px;
- border: none;
- cursor: pointer;
+    background-color: #000;
+    color: white;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
 }
 
 /* Dropdown button on hover & focus */
 .dropbtn:hover, .dropbtn:focus {
- background-color: #2980B9;
+    background: #ddd;
 }
 
 /* The container <div> - needed to position the dropdown content */
@@ -23,6 +65,7 @@
 .dropdown-content {
     display: none;
     position: absolute;
+    right: 0;
     background-color: #f1f1f1;
     min-width: 160px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
@@ -37,6 +80,16 @@
     text-align: left;
     display: block;
     width: 100%;
+
+    font-weight: bold;
+    font-size: .8rem;
+
+    border: none;
+    border-radius: 0px;
+}
+
+.dropdown-content .dropdownbtn.selected {
+    background: orange;
 }
 
 /* Change color of dropdown links on hover */
@@ -48,6 +101,8 @@
 /* Piano Keyboard styles */
 #scale-title {
     text-align: center;
+    font-family: "Helvetica", sans-serif;
+    font-weight: lighter;
 }
 
 #scale-display {
@@ -55,17 +110,27 @@
     flex-wrap: nowrap;
     max-width: 800px;
     margin: 0px auto;
+    /* box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); */
+    padding: 0px 1px 0px 0px;
 }
 
-#scale-display .key-container {
+.key-container {
     width: 100%;
     height: 150px;
     position: relative;
+    margin: auto 1px auto 0px;
 }
 
 .key {
     font-family: sans-serif;
     text-align: center;
+    box-shadow: 0px 8px 8px 0px rgba(0,0,0,0.2);
+
+}
+
+.selected-key {
+    font-weight: bold;
+    text-shadow: 1px 1px #000;
 }
 
 .key.white {
@@ -73,16 +138,24 @@
     background-color: white;
     position: absolute;
     white-space: pre;
-    padding: 100px 0px 0px;
+    /* padding: 100px 0px 0px; */
     border-style: solid;
     border-width: 1px;
     border-color: black;
     z-index: -1;
 
     width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
 }
-.key.white.selected {
-    background-color: red;
+
+.key.white.selected-key {
+    color: white;
+    background-color: #75e5ff; /* #ff7575; */
+    box-shadow: 0px 0px 0px 0px rgba(0,0,0,0.2);
+    height: 158px;
 }
 
 .key.black {
@@ -90,7 +163,7 @@
     background-color: black;
     display: inline-block;
     white-space: pre;
-    padding: 30px 0px 0px;
+    padding: 60px 0px 0px;
     border-style: solid;
     border-width: 1px;
     border-color: black;
@@ -99,7 +172,11 @@
     left: 100%;
     margin-left: -30%;
 }
-.key.black.selected {
-    color: black;
-    background-color: red;
+
+.key.black.selected-key {
+    color: white;
+    background-color: #75f9ff; /* #ff7575; */ /* #b90000; */
+
+    box-shadow: 0px 0px 0px 0px rgba(0,0,0,0.2);
+    padding: 68px 0px 0px;
 }

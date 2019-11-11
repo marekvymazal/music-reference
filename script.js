@@ -1,5 +1,82 @@
-var curKey = 3;
-var curScale = "Major";
+var keyMap = [
+    {
+        "id": "a",
+        "name":"A",
+    },
+    {
+        "id": "as",
+        "name":"A#",
+    },
+    {
+        "id": "b",
+        "name":"B",
+    },
+    {
+        "id": "c",
+        "name":"C",
+    },
+    {
+        "id": "cs",
+        "name":"C#",
+    },
+    {
+        "id": "d",
+        "name":"D",
+    },
+    {
+        "id": "ds",
+        "name":"D#",
+    },
+    {
+        "id": "e",
+        "name":"E",
+    },
+    {
+        "id": "f",
+        "name":"F",
+    },
+    {
+        "id": "fs",
+        "name":"F#",
+    },
+    {
+        "id": "g",
+        "name":"G",
+    },
+    {
+        "id": "gs",
+        "name":"G#",
+    }
+];
+
+var scalesData = null;
+
+var hashVars = window.location.hash.substr(1).split('+');
+var settings = {
+    "key": 3,
+    "scale": 0
+};
+
+hashVars.forEach( function(s){
+    var [key, value] = s.split("=");
+    if (key == "key"){
+        for (var i=0; i<keyMap.length; i++) {
+            if (keyMap[i].id == value){
+                settings[key] = i;
+            }
+        };
+    } else if (key == "scale" && scalesData != null) {
+        for (var i=0; i<scalesData.length; i++) {
+            if (scalesData[i].id == value){
+                settings[key] = i;
+            }
+        };
+    }
+});
+
+var curIntervals = [0,0,0,0,0,0,0,0,0,0,0,0];
+var keyButtons = [];
+var scaleButtons = [];
 
 // static data
 var keys = [
@@ -31,25 +108,6 @@ var keyIdentifier = [
     true,
     false
 ]
-
-var scales = [
-    {
-        name: "Major",
-        intervals: [1,0,1,0,1,1,0,1,0,1,0,1]
-    },
-    {
-        name: "Natural Minor",
-        intervals: [1,0,1,1,0,1,0,1,1,0,1,0]
-    },
-    {
-        name: "Melodic Minor",
-        intervals: [1,0,1,1,0,1,0,1,0,1,0,1]
-    },
-    {
-        name: "Harmonic Minor",
-        intervals: [1,0,1,1,0,1,0,1,1,0,0,1]
-    }
-];
 
 // converts key position into a normalized 0-12 piano key
 function convertPos( pos ){
@@ -89,7 +147,20 @@ function convertKey( start, note, key, intervals ){
     }
 }
 
-function updateScale(){
+function highlightOption( elementList, index ) {
+    for (var i=0; i<elementList.length; i++){
+        if (i == index) {
+            elementList[i].classList.add('selected');
+        } else {
+            elementList[i].classList.remove('selected');
+        }
+    }
+}
+
+function updatePage(){
+
+    console.log("key", settings.key);
+    console.log("scale", settings.scale);
 
     var width = window.innerWidth
     || document.documentElement.clientWidth
@@ -99,22 +170,20 @@ function updateScale(){
     || document.documentElement.clientHeight
     || document.body.clientHeight;
 
-    console.log(curKey);
-    console.log(curScale);
-    console.log(width);
+    if (scalesData == null){
+        return;
+    }
 
-    let curIntervals = null;
-    scales.forEach( function( s ){
-        if (s.name == curScale){
-            curIntervals = s.intervals;
-        }
-    });
+    highlightOption( keyButtons, settings.key );
+    highlightOption( scaleButtons, settings.scale );
+
+    curIntervals = scalesData[settings.scale].intervals;
+
 
     let scaleDisplay = document.getElementById('scale-display');
 
     // clear
     scaleDisplay.innerHTML = ""
-    //scaleDisplay.removeChildren();
 
     // add scales
     let totalKeys = 24;
@@ -125,7 +194,7 @@ function updateScale(){
     let targetContainer = null;
     for (var i=0; i<totalKeys; i++)
     {
-        let keyValues = convertKey(3, i, curKey, curIntervals);
+        let keyValues = convertKey(3, i, settings.key, curIntervals);
 
         if (keyValues.keyType == 'white'){
 
@@ -142,7 +211,7 @@ function updateScale(){
         note.innerHTML = keyValues.label;
 
         if (keyValues.selected){
-            note.className += " selected";
+            note.className += " selected-key";
         }
 
         targetContainer.appendChild(note);
@@ -150,7 +219,7 @@ function updateScale(){
 
     // update title
     let scaleTitle = document.getElementById('scale-title');
-    scaleTitle.innerHTML = keys[curKey] + " " + curScale;
+    scaleTitle.innerHTML = keys[settings.key] + " " + scalesData[settings.scale].name;
 }
 
 // Setup Dropdowns ======================================================
@@ -164,26 +233,28 @@ for (var i=0; i<keys.length; i++){
 
     b.name = i;
     b.onclick = function(){
-        curKey = parseInt(this.name);
-        updateScale();
+        settings.key = parseInt(this.name);
+        updatePage();
     };
 
     keyDropdown.appendChild(b);
 }
 
-// generate scale buttons
-let scaleDropdown = document.getElementById('scaleDropdown');
-for (var i=0; i<scales.length; i++){
-    let b = document.createElement("button");
-    b.className += "dropdownbtn";
-    b.innerHTML = scales[i].name;
+function createScaleButtons(){
+    let scaleDropdown = document.getElementById('scaleDropdown');
+    for (let scale in scalesData){
+        let b = document.createElement("button");
+        b.className += "dropdownbtn";
+        b.innerHTML = scalesData[scale].name;
 
-    b.onclick = function(){
-        curScale = this.innerHTML;
-        updateScale();
-    };
+        b.onclick = function(){
+            settings.scale = scale;
+            updateHash();
+        };
 
-    scaleDropdown.appendChild(b);
+        scaleDropdown.appendChild(b);
+        scaleButtons.push(b);
+    }
 }
 
 function enableDropdown(name, enabled ){
@@ -223,12 +294,14 @@ window.onclick = function(event) {
     }
 }
 
-function getUrlVars() {
-    var vars = {};
-    var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
-        vars[key] = value;
-    });
-    return vars;
+function updateHash()
+{
+    if (scalesData == null){
+        return;
+    }
+    const newHash = "key=" + keyMap[settings.key].id + "+scale=" + scalesData[settings.scale].id;
+    console.log(newHash);
+    window.location.hash = newHash;
 }
 
 // key buttons
@@ -237,12 +310,41 @@ for (var i=0; i<keyButtons.length; i++ )
 {
     keyButtons[i].name = i;
     keyButtons[i].onclick = function(){
-        curKey = parseInt(this.name);
-        updateScale();
+        settings.key = parseInt(this.name);
+        //updatePage();
+        updateHash();
     };
 };
 
-// initial setup
-updateScale();
+// AJAX load JSON
+function loadScales() {
+    try {
+       var http_request = new XMLHttpRequest();
+    } catch (e) {
+         console.log(e);
+         return false;
+    }
 
-window.addEventListener("resize", updateScale);
+    http_request.onreadystatechange = function() {
+        console.log("scaleData.js load status code:", this.status);
+        if (this.readyState == 4 && this.status == 200 ) {
+            scalesData = JSON.parse(http_request.responseText);
+            curIntervals = scalesData[settings.scale].intervals;
+            createScaleButtons();
+            updatePage();
+        }
+    }
+
+    http_request.open("GET", "scales.json", true);
+    http_request.send();
+ }
+
+// initial setup
+loadScales();
+updatePage();
+
+window.addEventListener("resize", updatePage);
+
+window.onhashchange = function(){
+    updatePage();
+}

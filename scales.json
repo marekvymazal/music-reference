@@ -1,0 +1,22 @@
+[
+    {
+        "id": "major",
+        "name": "Major",
+        "intervals": [1,0,1,0,1,1,0,1,0,1,0,1]
+    },
+    {
+        "id": "minor",
+        "name": "Natural Minor",
+        "intervals": [1,0,1,1,0,1,0,1,1,0,1,0]
+    },
+    {
+        "id": "melodic-minor",
+        "name": "Melodic Minor",
+        "intervals": [1,0,1,1,0,1,0,1,0,1,0,1]
+    },
+    {
+        "id": "harmonic-minor",
+        "name": "Harmonic Minor",
+        "intervals": [1,0,1,1,0,1,0,1,1,0,0,1]
+    }
+]
